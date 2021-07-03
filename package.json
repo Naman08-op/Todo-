@@ -5,13 +5,14 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js"
-    },
+  },
   "author": "Naman",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
     "mongodb": "^3.6.9",
-    "mongoose": "^5.13.0"
+    "mongoose": "^5.13.0",
+    "uuid-mongodb": "^2.4.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.9"
