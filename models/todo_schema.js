@@ -17,6 +17,9 @@ const todoSchema= new mongoose.Schema({
   todos:[todosSchema]
 })
 
+
+module.exports = mongoose.model('Todo',todoSchema)
+
 // const todoSchema= new mongoose.Schema({
 //     "username": {
 //       "type": "object",
@@ -45,4 +48,3 @@ const todoSchema= new mongoose.Schema({
 //       ]
 //     }})
 
-module.exports = mongoose.model('Todo',todoSchema)
