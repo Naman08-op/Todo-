@@ -2,8 +2,6 @@ const express = require('express')
 const router= express.Router()
 const Todo = require('../models/todo_schema')
 
-router.route('/todos/:id')
-
 
 
 router.get('/',async(req,res)=>{
@@ -40,18 +38,22 @@ router.post('/',async(req,res)=>{
     }
 })
 
- router.post('/todo/:username',async(req,res)=>{
-    const todo = new Todo({     
-    todos: req.params.todos,
-         todo: req.params.todo
-    })
-     try{
-        const a1= await todo.save()
-        res.json(a1)
-     }catch(err){
-        res.send("ERROR"+ err)
-     }
-    })
+
+    router.route("/todo").post(function(req, res) {
+        Todo.updateOne(
+          { _id : req.body._id },
+          { $push: { todos: req.body.todos } },
+          {safe: true, upsert: true},
+          function(err, result) {
+            if (err) {
+              res.send(err);
+            } else {
+                console.log(req.body);
+              res.json(result);
+            }
+          }
+        );
+      });
 
 
 
