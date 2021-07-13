@@ -16,7 +16,6 @@ const todoSchema= new mongoose.Schema({
   todos:[todos]
 })
 
-todoSchema.index({ username: 'text' });
 
 module.exports = mongoose.model('Todo',todoSchema)
 

@@ -6,15 +6,12 @@ var cors = require('cors');
 
 // get function where we pass the username at :user and if its found
 // then it'll return all the todos of that particular username
-// but this is showing some errors I'm working on resolving those errors. The output is -> []
-// not working. errors to be resolved.
+// working fine. shows all the todos of the given username
 router.get('/user/:user', cors(), function(req, res) {
   var user = req.params.user;
   console.log(req.params)
   Todo.find({
-    $text: {
-        $search: user
-    }
+    'username': user
 }, function(err, result) {
       if (err) throw err;
       if (result) {
