@@ -1,12 +1,11 @@
-const { randomUUID } = require('crypto');
-const { ObjectId } = require('mongodb');
-const { ObjectID } = require('mongodb');
 const mongoose = require('mongoose')
 const MUUID = require('uuid-mongodb');
 const mUUID1 = MUUID.v1();
 var string = mongoose.Types.ObjectId.isValid('')
+mongoose.set('useCreateIndex', true);
 
-const todosSchema= new mongoose.Schema({
+
+const todos= new mongoose.Schema({
   todo: String
 })
 
@@ -14,11 +13,13 @@ const todoSchema= new mongoose.Schema({
   username:{
     type: String
   },
-  todos:[todosSchema]
+  todos:[todos]
 })
 
+todoSchema.index({ username: 'text' });
 
 module.exports = mongoose.model('Todo',todoSchema)
+
 
 // const todoSchema= new mongoose.Schema({
 //     "username": {

@@ -1,5 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
+var cors = require('cors');
 const url = 'mongodb://localhost/NamanDBex'
 const app= express()
 

@@ -1,9 +1,46 @@
 const express = require('express')
 const router= express.Router()
 const Todo = require('../models/todo_schema')
+var cors = require('cors');
+
+
+// get function where we pass the username at :user and if its found
+// then it'll return all the todos of that particular username
+// but this is showing some errors I'm working on resolving those errors. The output is -> []
+// not working. errors to be resolved.
+router.get('/user/:user', cors(), function(req, res) {
+  var user = req.params.user;
+  console.log(req.params)
+  Todo.find({
+    $text: {
+        $search: user
+    }
+}, function(err, result) {
+      if (err) throw err;
+      if (result) {
+        console.log(result)
+          res.json(result)
+      } else {
+          res.send(
+              'Error'
+          )
+      }
+  })
+})
+
+// router.get('/todo/:user',async(req, res)=> {
+//   var user = req.params.user;
+// try{const todos = await Todo.find({$text:{$search:user}})
+// res.json(todos)
+// }catch(err){
+//   res.send(err)
+// }
+// })
 
 
 
+// getting all users along with their todos
+// its working
 router.get('/',async(req,res)=>{
      try{
          const todos = await Todo.find()
@@ -14,6 +51,8 @@ router.get('/',async(req,res)=>{
      }
  })
 
+ // getting todos of a particular user
+ // its working
  router.get('/todos/:username',async(req,res)=>{
     try{
         const todos = await Todo.findById(req.params.username)
@@ -24,6 +63,8 @@ router.get('/',async(req,res)=>{
     }
 })
 
+// for posting a user along with todos
+//its working
 router.post('/',async(req,res)=>{
     const todo = new Todo({
         username: req.body.username,
@@ -39,6 +80,8 @@ router.post('/',async(req,res)=>{
 })
 
 
+//for posting todos to a particular user
+// its working
     router.route("/todo").post(function(req, res) {
         Todo.updateOne(
           { _id : req.body._id },
@@ -55,7 +98,7 @@ router.post('/',async(req,res)=>{
         );
       });
 
-
+// routes for updating and deleting a todo will be added soon.
 
 
 module.exports = router
