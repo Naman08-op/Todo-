@@ -11,6 +11,7 @@ const todos= new mongoose.Schema({
 
 const todoSchema= new mongoose.Schema({
   username:{
+    unique: true,
     type: String
   },
   todos:[todos]

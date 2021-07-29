@@ -4,6 +4,19 @@ const Todo = require('../models/todo_schema')
 var cors = require('cors');
 
 
+
+router.get('/user', async (req,res) => {
+
+  try{
+    const todos = await Todo.find()
+    res.send(todos)
+
+}catch(err){
+    res.send('Error '+err)
+}
+})
+
+
 // get function where we pass the username at :user and if its found
 // then it'll return all the todos of that particular username
 // working fine. shows all the todos of the given username
@@ -11,11 +24,12 @@ router.get('/user/:user', cors(), function(req, res) {
   var user = req.params.user;
   console.log(req.params)
   Todo.find({
-    'username': user
+    'username': user,
 }, function(err, result) {
       if (err) throw err;
       if (result) {
         console.log(result)
+        console.log(Id)
           res.json(result)
       } else {
           res.send(
@@ -50,9 +64,9 @@ router.get('/',async(req,res)=>{
 
  // getting todos of a particular user
  // its working
- router.get('/todos/:username',async(req,res)=>{
+ router.get('/todos/:userid',async(req,res)=>{
     try{
-        const todos = await Todo.findById(req.params.username)
+        const todos = await Todo.findById(req.params.userid)
         res.json(todos)
 
     }catch(err){
@@ -79,7 +93,7 @@ router.post('/',async(req,res)=>{
 
 //for posting todos to a particular user
 // its working
-    router.route("/todo").post(function(req, res) {
+    router.route("/addTodo").post(function(req, res) {
         Todo.updateOne(
           { _id : req.body._id },
           { $push: { todos: req.body.todos } },
