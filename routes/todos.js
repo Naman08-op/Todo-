@@ -2,6 +2,82 @@ const express = require('express')
 const router= express.Router()
 const Todo = require('../models/todo_schema')
 var cors = require('cors');
+const jwt = require('jsonwebtoken');
+
+
+
+
+//New approach using Json web token. Let's see if it works
+
+router.post('/login',(req,res,next)=>{
+  Todo.findOne({username: req.body.username},(err,user)=>{
+    if(err) return res.status(401).json({
+      title:'server error',
+      error: err
+    })
+    if(!user){
+      return res.status(401).json({
+        title:'USER DOES NOT EXIST',
+        error:'USER DOES NOT EXIST'
+      })
+    }
+    //if successful login
+    let token =jwt.sign({userId: user._id},'secretkey');
+    console.log(token)
+    return res.status(200).json({
+      title:'login success',
+      token: token
+      
+    })
+  })
+})
+
+
+//another new approach for todo list
+
+router.get('/usertodos',(req,res,next)=>{
+  let token= req.headers.token;
+  jwt.verify(token,'secretkey',(err,decoded)=>{
+    if(err) return res.status(401).json({
+      title:'unauthorized'
+    })
+    //valid token
+    Todo.findOne({_id: decoded.userId},(err,user)=>{
+      if(err) return console.log(err)
+      console.log(user)
+      return res.status(200).json({
+        title:'user grabbed',
+        user:{
+          username:user.username,
+          todos:user.todos,
+          token:user._id
+        }
+      })
+    })
+  })
+})
+
+//for posting todos to a particular user
+// its working
+router.post("/addTodo",(req, res) =>{
+  
+  Todo.updateOne(
+    { _id : req.body._id },
+    { $push: { todo: req.body.todo } },
+    {safe: true, upsert: true},
+    function(err, result) {
+      if (err) {
+        res.send(err);
+      } else {
+          console.log(req.body);
+          console.log(result);
+          res.json({result});
+      }
+    }
+  );
+});
+
+
 
 
 
@@ -91,23 +167,7 @@ router.post('/',async(req,res)=>{
 })
 
 
-//for posting todos to a particular user
-// its working
-    router.route("/addTodo").post(function(req, res) {
-        Todo.updateOne(
-          { _id : req.body._id },
-          { $push: { todos: req.body.todos } },
-          {safe: true, upsert: true},
-          function(err, result) {
-            if (err) {
-              res.send(err);
-            } else {
-                console.log(req.body);
-              res.json(result);
-            }
-          }
-        );
-      });
+
 
 // routes for updating and deleting a todo will be added soon.
 
