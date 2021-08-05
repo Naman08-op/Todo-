@@ -5,22 +5,22 @@ var string = mongoose.Types.ObjectId.isValid('')
 mongoose.set('useCreateIndex', true);
 
 
-const todos= new mongoose.Schema({
-  todo: String
-})
+// const todos= new mongoose.Schema({
+//   todo: String
+// })
 
 const todoSchema= new mongoose.Schema({
   username:{
     unique: true,
     type: String
   },
-  todos:[todos]
+  todos:[{todo:String}]
 })
 
 
 module.exports = mongoose.model('Todo',todoSchema)
 
-
+  
 // const todoSchema= new mongoose.Schema({
 //     "username": {
 //       "type": "object",

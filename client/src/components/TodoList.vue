@@ -1,14 +1,28 @@
 <template>
     <div>
-        <button @click="logout">logout</button>
+         
+            <button class="button is-link" @click="logout">logout</button>
+              
         <form @submit.prevent="handleSubmit">
             <div>
                 <label>ADD Todo:</label>
                 <input type='todo' placeholder="Add todo" required v-model='inputtodo'/>
                 <div>    
                     <p>Todo:{{ inputtodo }}</p>
-                    <div class="control">
-                        <button class="button is-link">Submit</button>
+                    
+                    <div class="field is-grouped">
+                        <p class="control">
+                        <button class="button is-link">
+                       Submit
+                        </button>
+                    </p>
+                    
+                    
+                    <p class="control">
+                        <button class="button is-danger">
+                        Clear
+                        </button>
+                    </p>
                     </div>
                 </div>
             </div>
@@ -16,18 +30,20 @@
         <div>
     <h1>Hello {{username}}</h1>
     <h2>Your id is:{{id}}</h2>
-    <h2>{{items}}</h2>
+    
     <div class="container">
         <h3 class="p-3 text-center">Vue.js - Display a list of items with v-for</h3>
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
+                    <th> Todo ID</th>
                     <th>Todos</th>
                     
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="item in items" :key="item.id">
+                    <td>{{item._id}}</td>
                     <td>{{item.todo}}</td>
                     
                 </tr>
@@ -54,7 +70,7 @@
         }
     },
     mounted(){
-       axios.get('http://localhost:9000/todo/usertodos',{headers:{ token: sessionStorage.getItem('token')}})
+      axios.get('http://localhost:9000/todo/usertodos',{headers:{ token: sessionStorage.getItem('token')}})
        .then(res=>{
 
            this.username=res.data.user.username;
@@ -64,6 +80,7 @@
        })
    },
    methods:{
+       
 
        logout(){
            window.sessionStorage.clear();
@@ -84,9 +101,11 @@
                }
            })
            .then(res=>{
-               
+               window.location.reload();
+               this.items=res.data.user.todos;
                this.addedTodo=res.data.result,
                console.log(this.addedTodo)
+               this.inputtodo=" "
 
            })
            .catch(error =>{
@@ -99,3 +118,6 @@
     }
 </script>
 
+<style>
+    
+</style>

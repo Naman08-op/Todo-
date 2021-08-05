@@ -63,15 +63,22 @@ router.post("/addTodo",(req, res) =>{
   
   Todo.updateOne(
     { _id : req.body._id },
-    { $push: { todo: req.body.todo } },
+    { $push: { todos: req.body.todos } },
     {safe: true, upsert: true},
-    function(err, result) {
+    (err, user)=>{
       if (err) {
-        res.send(err);
+        return console.log(err)
       } else {
-          console.log(req.body);
-          console.log(result);
-          res.json({result});
+        return res.status(200).json({
+          title:'user grabbed',
+          user:{
+            
+            todos:user.todos,
+            
+          }
+        })
+           console.log(user.todos);
+          // res.json({result});
       }
     }
   );
@@ -105,7 +112,7 @@ router.get('/user/:user', cors(), function(req, res) {
       if (err) throw err;
       if (result) {
         console.log(result)
-        console.log(Id)
+        
           res.json(result)
       } else {
           res.send(
@@ -155,8 +162,7 @@ router.get('/',async(req,res)=>{
 router.post('/',async(req,res)=>{
     const todo = new Todo({
         username: req.body.username,
-        todos: req.body.todos,
-        todo: req.body.todo
+        todos: req.body.todos
     })
     try{
         const a1= await todo.save()
@@ -166,7 +172,30 @@ router.post('/',async(req,res)=>{
     }
 })
 
-
+router.delete('/:user/:todo',(req,res)=>{
+  
+  const deleted = Todo.findByIdAndUpdate(
+    {_id:req.params.user},
+    {
+      $pull:{
+        todos:{
+          _id: req.params.todo
+        }
+      },
+    
+      new: true
+    },
+    function(err, deleted) {
+      if (err) {
+        res.send(err);
+      } else {
+          console.log(req.params.user);
+          console.log(deleted);
+          res.json({deleted});
+      }
+    }
+    )
+})
 
 
 // routes for updating and deleting a todo will be added soon.
