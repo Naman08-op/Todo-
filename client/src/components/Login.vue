@@ -1,26 +1,27 @@
 <template>
-  <div>
-    <form @submit.prevent= "handleSubmit">
-    <div>
-    
-      <label>Username:</label>
-      <input type="username" placeholder="Username" required v-model="username" />
-    
-    <div>    
-        <p>Username:{{ username }}</p>
-        
-    </div>
-    <div class="control">
-    <button class="button is-link">Submit</button>
-    
+  <div id="app">
+    <div class="field">
+  <label class="label">Username</label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input is-success" type="text" placeholder="Enter your username" required v-model="username"/>
+    <span class="icon is-small is-left">
+      <i class="fas fa-user"></i>
+    </span>
+    <span class="icon is-small is-right">
+      <i class="fas fa-check"></i>
+    </span>
   </div>
-  <p> {{error}}</p>
-
+  <p>{{username}}</p>
   </div>
-  </form>
-  
+  <div class="field is-grouped">
+  <div class="control">
+    <button class="button is-link" @click=handleSubmit()>Submit</button>
+    
   </div>
   
+  </div>
+  <p class="help is-danger">{{error}}</p>
+  </div>
 </template>
 
 <script>
@@ -61,39 +62,12 @@ export default {
 </script>
 
 <style>
-form {
-  max-width: 420px;
-  margin: 30px auto;
-  background: rgb(226, 219, 219);
-  text-align: left;
-  padding: 40px;
-  border-radius: 10px;
+#app {
+  margin: auto;
+  margin-top: 3rem;
+  max-width: 700px;
 }
-
-label {
-  color: #aaa;
-  display: inline-block;
-  margin: 25px 0 15px;
-  font-size: 0.6em;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: bold;
-}
-input {
-  display: block;
-  padding: 10px 6px;
-  width: 100%;
-  box-sizing: border-box;
-  border: none;
-  border-bottom: 1px dolid #ddd;
-  color: #555;
-}
-button{
-  background: cadetblue;
-  border: 0;
-  padding: 10px 20px;
-  margin-top: 20px;
-  color: azure;
-  border-radius: 20px;
+.icon {
+  cursor: pointer;
 }
 </style>

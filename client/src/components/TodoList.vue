@@ -1,10 +1,10 @@
 <template>
-    <div>
+    <div id="list">
          
             <button class="button is-link" @click="logout">logout</button>
               
-        <form @submit.prevent="handleSubmit">
-            <div>
+        <!-- <form @submit.prevent="handleSubmit"> -->
+            <!-- <div>
                 <label>ADD Todo:</label>
                 <input type='todo' placeholder="Add todo" required v-model='inputtodo'/>
                 <div>    
@@ -25,30 +25,64 @@
                     </p>
                     </div>
                 </div>
-            </div>
-        </form>
+            </div> -->
+        <!-- </form> -->
+        <div class="field">
+  <label class="label">Username</label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input is-success" type="text" placeholder="Enter todos" required v-model="inputtodo"/>
+    <span class="icon is-small is-left">
+      <i class="fas fa-user"></i>
+    </span>
+    <span class="icon is-small is-right">
+      <i class="fas fa-check"></i>
+    </span>
+  </div>
+  
+  </div>
+  <div class="field is-grouped">
+                        <p class="control">
+                        <button class="button is-link" @click=handleSubmit()>
+                       Submit
+                        </button>
+                    </p>
+                    
+                    
+                    <p class="control">
+                        <button class="button is-danger" @click=clearTodos>
+                        Clear
+                        </button>
+                    </p>
+                    </div>
         <div>
     <h1>Hello {{username}}</h1>
     <h2>Your id is:{{id}}</h2>
     
-    <div class="container">
-        <h3 class="p-3 text-center">Vue.js - Display a list of items with v-for</h3>
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th> Todo ID</th>
-                    <th>Todos</th>
-                    
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="item in items" :key="item.id">
-                    <td>{{item._id}}</td>
-                    <td>{{item.todo}}</td>
-                    
-                </tr>
-            </tbody>
-        </table>
+    <div class="notification" v-for="(item,i) in items" :key="item._id">
+        <div class="columns">
+            <input class="column input" v-if="isSelected(item)" v-model="editedDescription" />
+            <p v-else class="column">
+                <span class="tag is-primary">{{ i + 1}}</span>
+          {{ item.todo }}
+        </p>
+        <div class="column is-narrow">
+          
+          <span
+            class="icon has-text-info"
+            @click="isSelected(item) ? updateTodo(item, i) : removeTodo(item, i)"
+          >
+            <i class="material-icons">{{isSelected(item) ? 'save': 'delete'}}</i>
+          </span>
+          <span
+            class="icon has-text-primary"
+            @click="isSelected(item) ?  unselect() : select(item)"
+          >
+            <i class="material-icons">{{isSelected(item) ? 'close': 'edit'}}</i>
+          </span>
+          </div>
+        </div>
+
+        
     </div>
   </div>
     </div>
@@ -62,6 +96,8 @@
             return{
                 items:[],
                 inputtodo:'',
+                editedDescription:'',
+                selected: {}
             }
         },
         created(){
@@ -69,7 +105,7 @@
             this.$router.push('/login');
         }
     },
-    mounted(){
+   async mounted(){
       axios.get('http://localhost:9000/todo/usertodos',{headers:{ token: sessionStorage.getItem('token')}})
        .then(res=>{
 
@@ -86,7 +122,7 @@
            window.sessionStorage.clear();
            this.$router.push('/login');
        },
-    handleSubmit(){
+    async handleSubmit(){
            console.log("Todo Added")
            console.log("Todo:",this.inputtodo)
             console.log(todoBody)
@@ -113,11 +149,45 @@
            })
            
            
-           }
+           },
+            async removeTodo(item,i){
+                axios.delete('http://localhost:9000/todo/'+this.id+'/'+item._id)
+                
+                    //window.location.reload();
+                    console.log(this.id)
+                console.log(item._id)
+                this.items.splice(i, 1);
+            },
+            async clearTodos(){
+                axios.delete('http://localhost:9000/todo/'+this.id)
+                this.items=[]
+            },
+            async updateTodo(item){
+                axios.put('http://localhost:9000/todo/'+this.id+'/'+item._id+'/'+this.editedDescription)
+                window.location.reload();
+           },
+            select(item) {
+            this.selected = item;
+            this.editedDescription = item.todo;
+            },
+            isSelected(item) {
+            return item._id === this.selected._id;
+            },
+            unselect() {
+            this.selected = {};
+            this.editedDescription = "";
+            },
    }
     }
 </script>
 
 <style>
-    
+  #list {
+  margin: auto;
+  margin-top: 3rem;
+  max-width: 700px;
+}
+.icon {
+  cursor: pointer;
+}
 </style>

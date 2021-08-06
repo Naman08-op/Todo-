@@ -7,13 +7,18 @@
     "start": "nodemon app.js --ignore 'client/'",
     "client": "npm run serve --prefix client",
     "dev": "concurrently \"npm run start\" \"npm run client\""
-  },
+  },"globals": {
+    "window": true,
+    "browser": true,
+    "localStorage":true
+    },
   "author": "Naman",
   "license": "ISC",
   "dependencies": {
     "@sideway/address": "^4.1.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "global": "^4.4.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.9",
     "mongoose": "^5.13.0",

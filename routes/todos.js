@@ -172,33 +172,39 @@ router.post('/',async(req,res)=>{
     }
 })
 
-router.delete('/:user/:todo',(req,res)=>{
+router.delete('/:user/:todo',(req,res,next)=>{
   
-  const deleted = Todo.findByIdAndUpdate(
+   Todo.findByIdAndUpdate(
     {_id:req.params.user},
-    {
-      $pull:{
-        todos:{
-          _id: req.params.todo
-        }
-      },
+    {$pull:{todos:{_id: req.params.todo}}},
+    { multi: false}).then((ok)=>{
+      console.log(ok);
+      console.log('deleted todo');
+      res.status(200).json(ok);
+    }).catch((error)=> console.log(error))
     
-      new: true
-    },
-    function(err, deleted) {
-      if (err) {
-        res.send(err);
-      } else {
-          console.log(req.params.user);
-          console.log(deleted);
-          res.json({deleted});
-      }
-    }
-    )
+})
+
+router.delete('/:user',(req,res)=>{
+  Todo.findByIdAndUpdate({_id: req.params.user},{$set:{todos:[]}},
+    {multi: true}).then((ok)=>{
+      console.log(ok);
+      console.log('deleted all todos');
+      res.status(200).json(ok);
+    }).catch((error)=> console.log(error))
 })
 
 
-// routes for updating and deleting a todo will be added soon.
+router.put('/:user/:id/:newTodo',(req,res)=>{
+  Todo.updateOne(
+    {_id: req.params.user, "todos._id":req.params.id},
+    {$set:{"todos.$.todo":req.params.newTodo}}
+  ).then((ok)=>{
+    console.log(ok);
+    console.log('updated Todo');
+    res.status(200).json(ok);
+  }).catch((error)=> console.log(error))
+})
 
 
 module.exports = router
