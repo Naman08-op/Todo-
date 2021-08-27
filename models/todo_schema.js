@@ -1,26 +1,23 @@
-const mongoose = require('mongoose')
-const MUUID = require('uuid-mongodb');
+const mongoose = require("mongoose");
+const MUUID = require("uuid-mongodb");
 const mUUID1 = MUUID.v1();
-var string = mongoose.Types.ObjectId.isValid('')
-mongoose.set('useCreateIndex', true);
-
+var string = mongoose.Types.ObjectId.isValid("");
+mongoose.set("useCreateIndex", true);
 
 // const todos= new mongoose.Schema({
 //   todo: String
 // })
 
-const todoSchema= new mongoose.Schema({
-  username:{
+const todoSchema = new mongoose.Schema({
+  username: {
     unique: true,
-    type: String
+    type: String,
   },
-  todos:[{todo:String}]
-})
+  todos: [{ todo: String }],
+});
 
+module.exports = mongoose.model("Todo", todoSchema);
 
-module.exports = mongoose.model('Todo',todoSchema)
-
-  
 // const todoSchema= new mongoose.Schema({
 //     "username": {
 //       "type": "object",
@@ -48,4 +45,3 @@ module.exports = mongoose.model('Todo',todoSchema)
 //         }
 //       ]
 //     }})
-
